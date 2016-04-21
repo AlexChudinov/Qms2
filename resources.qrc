@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="Actions-document-open-icon.png">Pictures/Actions-document-open-icon.png</file>
+        <file alias="Zoom-In-icon.png">Pictures/Zoom-In-icon.png</file>
+        <file alias="Zoom-Out-icon.png">Pictures/Zoom-Out-icon.png</file>
+        <file alias="sum.png">Pictures/sum.png</file>
+        <file alias="play.png">Pictures/Play.png</file>
+        <file alias="stop.png">Pictures/stop.png</file>
+        <file alias="qms.png">Pictures/qms.png</file>
+        <file alias="tdc.png">Pictures/tdc.png</file>
+        <file alias="warn.png">Pictures/warn.png</file>
+        <file alias="save.png">Pictures/save.png</file>
+        <file alias="hzoom.png">Pictures/hzoom.png</file>
+        <file alias="vzoom.png">Pictures/vzoom.png</file>
+        <file alias="balance.png">Pictures/balance.png</file>
+        <file alias="clock.png">Pictures/clock.png</file>
+        <file alias="tic.png">Pictures/tic.png</file>
+        <file alias="smooth.png">Pictures/smooth.png</file>
+    </qresource>
+</RCC>
