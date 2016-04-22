@@ -100,9 +100,6 @@ public:
 signals:
     void switchScale();
     void showTotal(bool);
-    void showSpline(bool);
-    ///Sets the spline button position
-    void setShowSpline(bool show);
     ///Trigger the show spline button
     void showSplineTriggered();
 
@@ -113,6 +110,10 @@ public slots:
 
     ///Shows the state of show total button, returns the value emitting a signal
     void isShowTotal();
+
+    ///Changes the show spline button icon
+    /// \param type What to show from the variants from the MassSpecPlot::MassSpecSplineShow enumeration
+    void setShowSplineIcon(MassSpecPlot::MassSpecSplineShow type);
 private:
     QAction* m_switchScales;
     QAction* m_showTotal;
@@ -169,14 +170,9 @@ public:
     bool getShowMSSpline() const;
 signals:
     void showMassSpec(QObject* massSpec, IMassSpectrum::MassSpecType);
-    void showMSSplineNotify(bool show);
-    void showSpline(QObject* plot);
-    void deleteSpline();
 
 public slots:
-    void setShowMSSpline(bool show);
     void onShowSplineTriggered();
-    void emitShowSpline();
 
 private:
     MassSpecPlot* m_massSpecPlot;

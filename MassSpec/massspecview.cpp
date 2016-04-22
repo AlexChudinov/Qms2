@@ -13,8 +13,6 @@ MassSpecView::MassSpecView(QWidget *parent)
       m_ionCurrentWnd(new QDockWidget("Полный ионный ток",this)),
       m_ionCurrentPlot(new IonCurrentPlot(this))
 {
-    //Set spline on of state
-    setShowMSSpline(false);
 
     //Set up ion current window
     m_ionCurrentWnd->setWidget(m_ionCurrentPlot);
@@ -43,9 +41,8 @@ MassSpecView::MassSpecView(QWidget *parent)
     connect(m_toolBar,SIGNAL(zoomOut()),m_massSpecPlot,SLOT(setZoomOut()));
     connect(m_massSpecPlot,SIGNAL(hZoomChanged(bool)),m_toolBar,SLOT(setHZoom(bool)));
     connect(m_massSpecPlot,SIGNAL(vZoomChanged(bool)),m_toolBar,SLOT(setVZoom(bool)));
-    connect(m_massSpecPlot,SIGNAL(switchScaleNotify(bool)),m_toolBar,SLOT(changeSwitchScalesActionIcon(bool)));
-    connect(m_toolBar,SIGNAL(showSpline(bool)),this,SLOT(setShowMSSpline(bool)));
-    connect(this,SIGNAL(showMSSplineNotify(bool)),m_toolBar,SIGNAL(setShowSpline(bool)));
+    connect(m_massSpecPlot,SIGNAL(switchScaleNotify(bool)),
+            m_toolBar,SLOT(changeSwitchScalesActionIcon(bool)));
     connect(m_toolBar,SIGNAL(showSplineTriggered()),
             this,SLOT(onShowSplineTriggered()));
 
@@ -56,25 +53,14 @@ MassSpecView::MassSpecView(QWidget *parent)
             m_massSpecPlot,SLOT(setMassSpec(QObject*,IMassSpectrum::MassSpecType)));
     connect(m_toolBar,SIGNAL(showTotal(bool)),m_massSpecPlot,SIGNAL(showTotal(bool)));
     connect(m_massSpecPlot,SIGNAL(massSpecLoaded()),m_toolBar,SLOT(isShowTotal()));
-
-    connect(m_massSpecPlot,SIGNAL(switchScaleNotify(bool)),this,SLOT(emitShowSpline()));
-    connect(m_massSpecPlot,SIGNAL(showTotal(bool)),this,SLOT(emitShowSpline()));
+    connect(m_massSpecPlot,SIGNAL(splineShowChanged(MassSpecPlot::MassSpecSplineShow)),
+            m_toolBar,SLOT(setShowSplineIcon(MassSpecPlot::MassSpecSplineShow)));
+    m_toolBar->setShowSplineIcon(m_massSpecPlot->splineShow());
 }
 
 MassSpecView::~MassSpecView()
 {
 
-}
-
-bool MassSpecView::getShowMSSpline() const
-{
-    return m_isShowMassSpecSpline;
-}
-
-void MassSpecView::setShowMSSpline(bool show)
-{
-    m_isShowMassSpecSpline = show;
-    emit showMSSplineNotify(show);
 }
 
 void MassSpecView::onShowSplineTriggered()
@@ -91,12 +77,6 @@ void MassSpecView::onShowSplineTriggered()
         m_massSpecPlot->splineShow(MassSpecPlot::OnlySpline);
         break;
     }
-}
-
-void MassSpecView::emitShowSpline()
-{
-    if(!m_isShowMassSpecSpline) return;
-    emit showSpline(m_massSpecPlot);
 }
 
 //================================================================
@@ -140,6 +120,22 @@ void MassSpecToolBar::changeSwitchScalesActionIcon(bool isTimeScale)
         m_switchScales->setIcon(QIcon(":/balance.png"));
 }
 
+void MassSpecToolBar::setShowSplineIcon(MassSpecPlot::MassSpecSplineShow type)
+{
+    switch(type)
+    {
+    case MassSpecPlot::OnlyMassSpec:
+        m_showSpline->setIcon(QIcon(":/onlyms.png"));
+        break;
+    case MassSpecPlot::OnlySpline:
+        m_showSpline->setIcon(QIcon(":/spline.png"));
+        break;
+    case MassSpecPlot::MassSpecAndSpline:
+        m_showSpline->setIcon(QIcon(":/splineandms.png"));
+        break;
+    }
+}
+
 //================================================================
 
 //MassSpecPlot methods
@@ -161,6 +157,7 @@ MassSpecPlot::MassSpecPlot(QWidget *parent)
 
     connect(this,SIGNAL(splineShowChanged(MassSpecPlot::MassSpecSplineShow)),
             this,SLOT(showMassSpec()));
+    connect(xAxis,SIGNAL(rangeChanged(QCPRange)),this,SLOT(showMassSpec()));
 }
 
 MassSpecPlot::~MassSpecPlot()
@@ -241,6 +238,7 @@ void MassSpecPlot::addSpline()
         else
             xvalues = m_msDataStruct->MassScale(); //set mass scale
 
+        yvalues.resize(xvalues.size());
         int i = 0;
 
         //Note, spline is build upon the time scale, because it is native
@@ -252,7 +250,6 @@ void MassSpecPlot::addSpline()
             if(m_isTimeScale)
             {
                 yvalues[i++] = spline(x);
-                qDebug() << i << "\n";
             }
             else
                 yvalues[i++] = spline(m_msDataStruct->massToTime(x));

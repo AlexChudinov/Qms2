@@ -52,8 +52,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->massSpecMathWnd->setWindowTitle("Анализ данных");
     ui->massSpecMathContents->setLayout(ui->massSpecMathLayout);
     ui->massSpecMathLayout->addWidget(logSplineModel);
-    connect(massSpec,SIGNAL(showSpline(QObject*)),logSplineModel,SLOT(setPlot(QObject*)));
-    connect(massSpec,SIGNAL(deleteSpline()),logSplineModel,SIGNAL(deleteSpline()));
 }
 
 MainWindow::~MainWindow()
