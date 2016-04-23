@@ -1,2 +1,0 @@
-22.04.2016
-Icons for spline switching button were added.

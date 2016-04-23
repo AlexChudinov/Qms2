@@ -66,6 +66,8 @@ signals:
 
     ///Signalizes that smoothing degree was changed
     void lambdaChanged(double lambda);
+    ///Emits spline std value
+    void splineStd(double std);
 public slots:
     ///Sets mass spectrum data pointer to an instance
     /// \param[in] massSpec Pointer to mass spectrum data wrapper

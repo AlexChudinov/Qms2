@@ -1,5 +1,5 @@
 INCLUDEPATH += $$PWD \
-               $$PWD/QCustomPlot/Include
+               C:/QCustomPlot/Include
 
 HEADERS += $$PWD/zoomplot.h \
     $$PWD/zoomplottoolbar.h
@@ -7,4 +7,4 @@ HEADERS += $$PWD/zoomplot.h \
 SOURCES += $$PWD/zoomplot.cpp \
     $$PWD/zoomplottoolbar.cpp
 
-LIBS += $$PWD/QCustomPlot/Lib/libqcustomplotd.a
+LIBS += C:/QCustomPlot/Lib/libqcustomplot.a

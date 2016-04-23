@@ -236,6 +236,7 @@ void MassSpecPlot::addSpline()
 {
     QVector<double> xvalues, yvalues;
     LogSplines spline = m_msDataStruct->getSplineLine(m_lambda);
+    emit splineStd(spline.std());
     if(rescalable())
     {
         if(m_isTimeScale) //show mass spectrum in a time scale
