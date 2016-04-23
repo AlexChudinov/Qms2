@@ -34,7 +34,6 @@ signals:
     void calibrationChanged();
     void massSpecIdxChanged();
     void showTotalChanged();
-    void frameSizeChanged(int frameSize);
     void massSpecViewChanged(); //connects all signals in one
 
 public slots:

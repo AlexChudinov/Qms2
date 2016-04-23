@@ -4,6 +4,11 @@
 
 LogSplines::LogSplines(const FunVals &data, const DataArray &w, double lambda)
 {
+    if(data.empty())
+    {
+        m_cubicSpline = nullptr;
+        return;
+    }
     DataArray
             x(data.size()),
             lgy(data.size()),
@@ -53,7 +58,7 @@ LogSplines::LogSplines(const FunVals &data, const DataArray &w, double lambda)
         wnorm+= w[i++];
     }
 
-    m_std = ::sqrt((x02-(x0*x0))/wnorm
+    m_std = ::sqrt((x02-(x0*x0)/wnorm)/wnorm
                    * static_cast<double>(xLgy.size())/static_cast<double>(xLgy.size()-1));
 
     m_cubicSpline = new CubicSpline(xLgy);
@@ -62,9 +67,12 @@ LogSplines::LogSplines(const FunVals &data, const DataArray &w, double lambda)
 LogSplines::LogSplines(const LogSplines &spline)
     :
       m_std(spline.std()),
-      m_yMin(spline.yMin()),
-      m_cubicSpline(new CubicSpline(*spline.cubicSpline()))
+      m_yMin(spline.yMin())
 {
+    if(spline.cubicSpline())
+        m_cubicSpline = new CubicSpline(*spline.cubicSpline());
+    else
+        m_cubicSpline = nullptr;
 }
 
 LogSplines& LogSplines::operator=(const LogSplines& spline)
@@ -82,6 +90,7 @@ LogSplines::~LogSplines()
 
 double LogSplines::operator ()(double x) const
 {
+    if(!m_cubicSpline) return 0.0;
     const CubicSpline& spline = *m_cubicSpline;
     return ::exp(spline(x)) + m_yMin - 1.0;
 }
@@ -93,6 +102,7 @@ double LogSplines::std() const
 
 FunVals LogSplines::operator ()(double xmin, double xmax, int nBins) const
 {
+    if(!m_cubicSpline) return FunVals();
     const LogSplines& spline = *this;
 
     //error checking

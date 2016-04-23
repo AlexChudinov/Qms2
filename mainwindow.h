@@ -5,6 +5,7 @@
 #include <tdcview.h>
 #include <massspecview.h>
 #include <imassspectrum.h>
+#include <idataanalysis.h>
 
 namespace Ui {
 class MainWindow;
@@ -34,6 +35,8 @@ private:
     Ui::MainWindow *ui;
     TdcView* tdcView;
     QToolBar* toolBarView;
+
+    IDataAnalysisView* m_dataAnalysisContent;
 
     QString m_fileFilters;
 };

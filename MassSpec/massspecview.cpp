@@ -55,6 +55,8 @@ MassSpecView::MassSpecView(QWidget *parent)
     connect(m_massSpecPlot,SIGNAL(splineShowChanged(MassSpecPlot::MassSpecSplineShow)),
             m_toolBar,SLOT(setShowSplineIcon(MassSpecPlot::MassSpecSplineShow)));
     m_toolBar->setShowSplineIcon(m_massSpecPlot->splineShow());
+    connect(m_massSpecPlot,SIGNAL(splineStd(double)),
+            this,SIGNAL(splineStd(double)));
 }
 
 MassSpecView::~MassSpecView()
@@ -78,7 +80,7 @@ void MassSpecView::onShowSplineTriggered()
     }
 }
 
-void MassSpecView::smoothing(bool lambda)
+void MassSpecView::smoothing(double lambda)
 {
     m_massSpecPlot->lambda(lambda);
 }

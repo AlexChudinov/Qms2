@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     tdcView(new TdcView(this)),
     toolBarView(addToolBar("Управление видом приложения.")),
+    m_dataAnalysisContent(new IDataAnalysisView(this)),
     m_fileFilters()
 {
     setAcceptDrops(true);
@@ -50,6 +51,11 @@ MainWindow::MainWindow(QWidget *parent) :
     //Data analysis window
     ui->massSpecMathWnd->setWindowTitle("Анализ данных");
     ui->massSpecMathContents->setLayout(ui->massSpecMathLayout);
+    ui->massSpecMathLayout->addWidget(m_dataAnalysisContent);
+    connect(m_dataAnalysisContent,SIGNAL(smoothing(double)),
+            massSpec,SLOT(smoothing(double)));
+    connect(massSpec,SIGNAL(splineStd(double)),
+            m_dataAnalysisContent,SIGNAL(splineStd(double)));
 }
 
 MainWindow::~MainWindow()

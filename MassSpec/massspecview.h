@@ -47,7 +47,6 @@ public:
     void splineBins(int nBins);
 
     inline double lambda() const { return m_lambda; }
-    void lambda(double lambda_);
 signals:
     void showTotal(bool);
     void massSpecLoaded();
@@ -67,7 +66,7 @@ signals:
     ///Signalizes that smoothing degree was changed
     void lambdaChanged(double lambda);
     ///Emits spline std value
-    void splineStd(double std);
+    void splineStd(double std_);
 public slots:
     ///Sets mass spectrum data pointer to an instance
     /// \param[in] massSpec Pointer to mass spectrum data wrapper
@@ -79,6 +78,7 @@ public slots:
     ///Switchs between time and m/z scales
     void switchScale();
 
+    void lambda(double lambda_);
 private:
     MassSpectrumBase* m_msDataStruct;
 
@@ -175,6 +175,7 @@ public:
     ~MassSpecView();
 
 signals:
+    void splineStd(double std_);
     void showMassSpec(QObject* massSpec);
 
 public slots:
@@ -182,7 +183,7 @@ public slots:
 
     ///Sets spline smoothing parameter
     /// \param lambda Spline smoothing parameter
-    void smoothing(bool lambda);
+    void smoothing(double lambda);
 
 private:
     MassSpecPlot* m_massSpecPlot;
