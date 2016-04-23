@@ -83,7 +83,7 @@ void IMassSpectrum::loadMassSpec(QString fileName, QString fileFilter)
         m_type = TOFFILE;
         emit state(fileName);
 
-        emit showMassSpec(qobject_cast<QObject*>(m_msDataStruct),TOFFILE);
+        emit showMassSpec(qobject_cast<QObject*>(m_msDataStruct));
         return;
     }
     default:
@@ -143,10 +143,10 @@ void IMassSpectrum::setTdcConnection(QObject *tdcDataStream)
     removeData();
     m_msDataStruct = reinterpret_cast<TdcDataStorage*>(tdcDataStream);
     m_type = TDCSTREAM;
-    m_isDeleteProhibited = true;
+    m_isDeleteProhibited = true;        
 
     emit state("Накопление событий...");
-    emit showMassSpec(qobject_cast<QObject*>(m_msDataStruct),TDCSTREAM);
+    emit showMassSpec(qobject_cast<QObject*>(m_msDataStruct));
 }
 
 IMassSpectrum::MassSpecType IMassSpectrum::stringToType(QString strType)

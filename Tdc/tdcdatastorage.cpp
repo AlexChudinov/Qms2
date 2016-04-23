@@ -13,6 +13,7 @@ TdcDataStorage::TdcDataStorage(QObject *parent, int frameSize)
       m_frameSize(frameSize)
 {
     setMassSpecIdx(-1); //signalize that there are no mass spectrums yet
+    connect(this,SIGNAL(frameRead()),this,SIGNAL(massSpecViewChanged()));
 }
 
 TdcDataStorage::~TdcDataStorage()

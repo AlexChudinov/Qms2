@@ -35,7 +35,6 @@ private:
     Ui::MainWindow *ui;
     TdcView* tdcView;
     QToolBar* toolBarView;
-    LogSplinesView* logSplineModel;
 
     QString m_fileFilters;
 };

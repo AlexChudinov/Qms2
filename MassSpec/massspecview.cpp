@@ -31,8 +31,8 @@ MassSpecView::MassSpecView(QWidget *parent)
     connect(m_ionCurrentPlot,SIGNAL(hZoomChanged(bool)),m_toolBar,SLOT(setHZoom(bool)));
     connect(m_ionCurrentPlot,SIGNAL(vZoomChanged(bool)),m_toolBar,SLOT(setVZoom(bool)));
 
-    connect(this,SIGNAL(showMassSpec(QObject*,IMassSpectrum::MassSpecType)),
-            m_ionCurrentPlot,SLOT(setMassSpec(QObject*,IMassSpectrum::MassSpecType)));
+    connect(this,SIGNAL(showMassSpec(QObject*)),
+            m_ionCurrentPlot,SLOT(setMassSpec(QObject*)));
 
     //Set up mass spec window
     connect(m_toolBar,SIGNAL(switchScale()),m_massSpecPlot,SLOT(switchScale()));
@@ -49,8 +49,7 @@ MassSpecView::MassSpecView(QWidget *parent)
     addToolBar(Qt::TopToolBarArea,m_toolBar);
     setCentralWidget(m_massSpecPlot);
 
-    connect(this,SIGNAL(showMassSpec(QObject*,IMassSpectrum::MassSpecType)),
-            m_massSpecPlot,SLOT(setMassSpec(QObject*,IMassSpectrum::MassSpecType)));
+    connect(this,SIGNAL(showMassSpec(QObject*)),m_massSpecPlot,SLOT(setMassSpec(QObject*)));
     connect(m_toolBar,SIGNAL(showTotal(bool)),m_massSpecPlot,SIGNAL(showTotal(bool)));
     connect(m_massSpecPlot,SIGNAL(massSpecLoaded()),m_toolBar,SLOT(isShowTotal()));
     connect(m_massSpecPlot,SIGNAL(splineShowChanged(MassSpecPlot::MassSpecSplineShow)),
@@ -77,6 +76,11 @@ void MassSpecView::onShowSplineTriggered()
         m_massSpecPlot->splineShow(MassSpecPlot::OnlySpline);
         break;
     }
+}
+
+void MassSpecView::smoothing(bool lambda)
+{
+    m_massSpecPlot->lambda(lambda);
 }
 
 //================================================================
@@ -155,6 +159,7 @@ MassSpecPlot::MassSpecPlot(QWidget *parent)
     splineShow(OnlyMassSpec);
     lambda(1000);
 
+    connect(this,SIGNAL(lambdaChanged(double)),this,SLOT(showMassSpec()));
     connect(this,SIGNAL(splineShowChanged(MassSpecPlot::MassSpecSplineShow)),
             this,SLOT(showMassSpec()));
     connect(xAxis,SIGNAL(rangeChanged(QCPRange)),this,SLOT(showMassSpec()));
@@ -165,7 +170,7 @@ MassSpecPlot::~MassSpecPlot()
 
 }
 
-void MassSpecPlot::setMassSpec(QObject *massSpec, IMassSpectrum::MassSpecType)
+void MassSpecPlot::setMassSpec(QObject *massSpec)
 {
     m_msDataStruct = qobject_cast<MassSpectrumBase*>(massSpec);
     connect(m_msDataStruct,SIGNAL(massSpecViewChanged()),this,SLOT(showMassSpec()));
@@ -199,8 +204,8 @@ void MassSpecPlot::switchScale()
                     m_msDataStruct->massToTime(xAxis->range().upper)
                 );
     }
-    showMassSpec();
     emit switchScaleNotify(m_isTimeScale);
+    showMassSpec();
 }
 
 void MassSpecPlot::showMassSpec()
@@ -391,16 +396,12 @@ void IonCurrentPlot::attachCurve(const QVector<double> &x, const QVector<double>
     replot();
 }
 
-void IonCurrentPlot::setMassSpec(QObject *massSpec, IMassSpectrum::MassSpecType type)
+void IonCurrentPlot::setMassSpec(QObject *massSpec)
 {
     m_msDataStruct = qobject_cast<MassSpectrumBase*>(massSpec);
 
     connect(m_msDataStruct,SIGNAL(massSpecIdxChanged()),
             this,SLOT(showMassSpec()));
-
-    if( type==IMassSpectrum::TDCSTREAM )
-        connect(reinterpret_cast<TdcDataStorage*>(m_msDataStruct),SIGNAL(frameRead()),
-                this,SLOT(showMassSpec()));
 
     m_massSpecIdxPos->setPen(QPen(Qt::green,2)); //show
 

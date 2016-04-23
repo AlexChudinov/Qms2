@@ -47,9 +47,12 @@ public:
     inline double lambda() const { return m_lambda; }
     void lambda(double lambda_);
 signals:
-    void switchScaleNotify(bool isTimeScale);
     void showTotal(bool);
     void massSpecLoaded();
+
+    ///Notifies about scale switching
+    /// \param isTimeScale Is true if scale is time
+    void switchScaleNotify(bool isTimeScale);
 
     ///Signalizes that spline show state was changed
     /// \param splineShow Current spline show state
@@ -64,7 +67,7 @@ signals:
 public slots:
     ///Sets mass spectrum data pointer to an instance
     /// \param[in] massSpec Pointer to mass spectrum data wrapper
-    void setMassSpec(QObject* massSpec,IMassSpectrum::MassSpecType type);
+    void setMassSpec(QObject* massSpec);
 
     ///Shows mass spectrum on a graph
     void showMassSpec();
@@ -139,7 +142,7 @@ signals:
 public slots:
     ///Sets mass spectrum data pointer to an instance
     /// \param[in] massSpec Pointer to mass spectrum data wrapper
-    void setMassSpec(QObject* massSpec,IMassSpectrum::MassSpecType type);
+    void setMassSpec(QObject* massSpec);
 
     ///Create new graph on a plot
     /// \param[in] x X-axis values
@@ -167,12 +170,15 @@ public:
     MassSpecView(QWidget *parent = 0);
     ~MassSpecView();
 
-    bool getShowMSSpline() const;
 signals:
-    void showMassSpec(QObject* massSpec, IMassSpectrum::MassSpecType);
+    void showMassSpec(QObject* massSpec);
 
 public slots:
     void onShowSplineTriggered();
+
+    ///Sets spline smoothing parameter
+    /// \param lambda Spline smoothing parameter
+    void smoothing(bool lambda);
 
 private:
     MassSpecPlot* m_massSpecPlot;

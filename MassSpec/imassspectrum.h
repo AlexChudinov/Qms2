@@ -50,7 +50,7 @@ public:
     /// \return TRUE if it is
     bool isNeedToSave() const;
 signals:
-    void showMassSpec(QObject* massSpec, IMassSpectrum::MassSpecType type);
+    void showMassSpec(QObject* massSpec);
     void state(QString); //signalize about current state
 
 public slots:

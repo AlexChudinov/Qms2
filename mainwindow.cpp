@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     tdcView(new TdcView(this)),
     toolBarView(addToolBar("Управление видом приложения.")),
-    logSplineModel(new LogSplinesView(this)),
     m_fileFilters()
 {
     setAcceptDrops(true);
@@ -33,8 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->setLayout(ui->mainLayout);
     ui->mainLayout->addWidget(massSpec);
 
-    connect(massSpecInter,SIGNAL(showMassSpec(QObject*,IMassSpectrum::MassSpecType)),
-            massSpec,SIGNAL(showMassSpec(QObject*,IMassSpectrum::MassSpecType)));
+    connect(massSpecInter,SIGNAL(showMassSpec(QObject*)),
+            massSpec,SIGNAL(showMassSpec(QObject*)));
     connect(tdcView,SIGNAL(showMassSpec(QObject*)),massSpecInter,SLOT(setTdcConnection(QObject*)));
     connect(massSpecInter,SIGNAL(state(QString)),ui->statusBar,SLOT(showMessage(QString)));
 
@@ -51,7 +50,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //Data analysis window
     ui->massSpecMathWnd->setWindowTitle("Анализ данных");
     ui->massSpecMathContents->setLayout(ui->massSpecMathLayout);
-    ui->massSpecMathLayout->addWidget(logSplineModel);
 }
 
 MainWindow::~MainWindow()
