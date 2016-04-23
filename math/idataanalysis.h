@@ -13,7 +13,7 @@ public:
     void smoothing(double smoothing);
     double smoothing() const;
 
-    void splineStd(double splineStd) const;
+    void splineStd(double splineStd);
     double splineStd() const;
 signals:
     void smoothingChanged(double smoothing);

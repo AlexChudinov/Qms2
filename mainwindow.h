@@ -5,7 +5,6 @@
 #include <tdcview.h>
 #include <massspecview.h>
 #include <imassspectrum.h>
-#include <ilogspline.h>
 
 namespace Ui {
 class MainWindow;

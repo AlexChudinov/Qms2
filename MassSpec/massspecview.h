@@ -15,6 +15,8 @@
 
 class MassSpectrumBase;
 
+
+
 /*!
   Draws mass spectrum
 */
