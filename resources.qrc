@@ -18,5 +18,6 @@
         <file alias="onlyms.png">Pictures/onlyms.png</file>
         <file alias="spline.png">Pictures/spline.png</file>
         <file alias="splineandms.png">Pictures/splineandms.png</file>
+        <file alias="data_analysis.png">Pictures/Data_analysis.png</file>
     </qresource>
 </RCC>

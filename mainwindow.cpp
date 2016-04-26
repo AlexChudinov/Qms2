@@ -56,6 +56,10 @@ MainWindow::MainWindow(QWidget *parent) :
             massSpec,SLOT(smoothing(double)));
     connect(massSpec,SIGNAL(splineStd(double)),
             m_dataAnalysisContent,SIGNAL(splineStd(double)));
+    QAction* toggleActionDataAnalysis = ui->massSpecMathWnd->toggleViewAction();
+    toggleActionDataAnalysis->setIcon(QIcon(":/data_analysis.png"));
+    toolBarView->addAction(toggleActionDataAnalysis);
+    ui->menuView->addAction(toggleActionDataAnalysis);
 }
 
 MainWindow::~MainWindow()

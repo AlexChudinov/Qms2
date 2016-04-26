@@ -6,6 +6,7 @@ IDataAnalysis::IDataAnalysis(QObject *parent)
 {
 
     QStandardItem* smoothingTitle = new QStandardItem("Сглаживание");
+    smoothingTitle->setIcon(QIcon(":/splineandms.png"));
     QStandardItem* smoothingFactor = new QStandardItem("Сглаживающий параметр");
     QStandardItem* smoothingStd = new QStandardItem("Стандартное отклонение");
     m_smoothingVal = new QStandardItem("1000.0");
@@ -27,11 +28,15 @@ IDataAnalysis::IDataAnalysis(QObject *parent)
     smoothingFactorList.push_back(smoothingFactor);
     smoothingFactorList.push_back(m_smoothingVal);
     smoothingFactor->setEditable(false);
+    smoothingFactor->setBackground(QBrush(Qt::green));
+    m_smoothingVal->setBackground(QBrush(Qt::yellow));
 
     QList<QStandardItem*> stdList;
     stdList.push_back(smoothingStd);
     stdList.push_back(m_stdVal);
     smoothingStd->setEditable(false);
+    smoothingStd->setBackground(QBrush(Qt::green));
+    m_stdVal->setBackground(QBrush(Qt::yellow));
 
     smoothingTitle->appendRow(smoothingFactorList);
     smoothingTitle->appendRow(stdList);
