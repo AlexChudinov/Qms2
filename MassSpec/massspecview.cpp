@@ -234,6 +234,27 @@ void MassSpecPlot::showMassSpec()
     replot();
 }
 
+void MassSpecPlot::mouseReleaseEvent(QMouseEvent *)
+{
+    zoomRelease();
+    if(m_splineShow == MassSpecAndSpline)
+    {
+        const QCPDataMap& xydata = *graph(1)->data();
+        double splineYMax = std::max_element(xydata.begin(),
+                                              xydata.end(),
+                                              [](const QCPData& e1, const QCPData& e2)
+                                              ->bool
+        {
+            return e1.value < e2.value;
+        })->value;
+        if(splineYMax > yAxis->range().upper)
+        {
+            yAxis->setRangeUpper(splineYMax);
+        }
+        replot();
+    }
+}
+
 void MassSpecPlot::addSpline()
 {
     QVector<double> xvalues, yvalues;
@@ -359,6 +380,33 @@ void MassSpecPlot::lambda(double lambda_)
     emit lambdaChanged(m_lambda);
 }
 
+void MassSpecPlot::choosePeak(double x, double y)
+{
+    if(m_splineShow != MassSpecAndSpline || m_splineShow != OnlySpline)
+    {
+        QMessageBox::information(this,
+                                 "Функция choosePeak!",
+                                 "Чтобы выбрать пик, нужно включить линию сплайна.");
+        return;
+    }
+
+    const QCPGraph* spline;
+
+    switch (m_splineShow) {
+    case MassSpecAndSpline:
+        spline = graph(1);
+        break;
+    case OnlySpline:
+        spline = graph(0);
+        break;
+    default:
+        ;
+    }
+
+    const QCPDataMap& splineData = *spline->data();
+
+    emit peakChosen(x,y);
+}
 //===========================================================================================
 
 //IonCurrentPlot methods

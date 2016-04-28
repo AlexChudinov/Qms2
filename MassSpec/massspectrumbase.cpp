@@ -8,7 +8,9 @@ MassSpectrumBase::MassSpectrumBase(QObject *parent)
       m_k(2.9),m_t0(-0.07), //default calibration parameters taken from the most of our data
       m_showTotal(false),
       m_isNeedToSave(false),
-      m_isError(false)
+      m_isError(false),
+      m_spline(nullptr),
+      m_lambda(0.0)
 {
     connect(this,SIGNAL(massSpecIdxChanged()),
             this,SIGNAL(massSpecViewChanged()));

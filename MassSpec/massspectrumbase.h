@@ -54,6 +54,9 @@ protected:
     bool m_isNeedToSave; //data needs to be saved
 
     bool m_isError; //True if some errors occur in the instance
+
+    LogSplines* m_spline;
+    double m_lambda;
 };
 
 #endif // MASSSPECTRUMBASE_H

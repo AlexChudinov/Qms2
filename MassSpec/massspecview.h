@@ -43,13 +43,26 @@ public:
     /// \param Enum value MassSpecPlot::MassSpecSplineShow
     void splineShow(MassSpecSplineShow splineShow);
 
+    void mouseReleaseEvent(QMouseEvent* );
+
     int splineBins() const;
     void splineBins(int nBins);
 
     inline double lambda() const { return m_lambda; }
+
+    ///Choose the peak in mass spectrum with a mouse click
+    /// \param x X position of the mouse cursor
+    /// \param y Y position of the mouse cursor
+    void choosePeak(double x, double y);
+
 signals:
     void showTotal(bool);
     void massSpecLoaded();
+
+    ///Do some operations further with the chosen peak
+    /// \param m Peak m/z
+    /// \param m Peak intensity
+    void peakChosen(double m, double I);
 
     ///Notifies about scale switching
     /// \param isTimeScale Is true if scale is time
