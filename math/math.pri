@@ -8,11 +8,13 @@ HEADERS +=  $$PWD/matrix.hpp \
     $$PWD/cubicspline.h \
     $$PWD/exception.h \
     $$PWD/logsplines.h \
-    $$PWD/idataanalysis.h
+    $$PWD/idataanalysis.h \
+    $$PWD/peacewisepolynomial.h
 
 SOURCES += $$PWD/splines.cpp \
     $$PWD/cubicspline.cpp \
     $$PWD/logsplines.cpp \
-    $$PWD/idataanalysis.cpp
+    $$PWD/idataanalysis.cpp \
+    $$PWD/peacewisepolynomial.cpp
 
 LIBS += $$PWD/Lib/libCubicSpline.a

@@ -21,7 +21,7 @@ public:
     ///Calculates spline line
     /// \param lambda Smoothing factor
     /// \return Spline for given mass spectrum state
-    LogSplines getSplineLine(double lambda) const;
+    const LogSplines &getSplineLine(double lambda);
 
     double massToTime(double mass) const; //Translates mass to time value
     double timeToMass(double time) const; //Translates time to m/z value
@@ -57,6 +57,11 @@ protected:
 
     LogSplines* m_spline;
     double m_lambda;
+
+    void deleteSpline();
+
+private slots:
+    void createSpline();
 };
 
 #endif // MASSSPECTRUMBASE_H

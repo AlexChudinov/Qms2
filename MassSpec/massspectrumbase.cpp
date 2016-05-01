@@ -22,7 +22,7 @@ MassSpectrumBase::MassSpectrumBase(QObject *parent)
 
 MassSpectrumBase::~MassSpectrumBase()
 {
-
+    deleteSpline();
 }
 
 //Functions to estimate calibration coefficients
@@ -89,7 +89,9 @@ void MassSpectrumBase::setCalibration(double k, double t0)
 //Set the mass spectrum idx to show
 void MassSpectrumBase::setMassSpecIdx(int idx)
 {
+    if(idx == m_idx) return;
     m_idx = idx;
+    if(m_spline) createSpline();
     emit massSpecIdxChanged();
 }
 
@@ -101,8 +103,11 @@ int MassSpectrumBase::getMassSpecIdx() const
 //Show total mass spectrum on a graph
 void MassSpectrumBase::setShowTotal(bool showTotal)
 {
+    if(showTotal == m_showTotal) return;
     m_showTotal = showTotal;
+    if(m_spline) createSpline();
     emit showTotalChanged();
+    //if(m_spline) createSpline();
 }
 
 bool MassSpectrumBase::isShowTotal() const
@@ -135,18 +140,42 @@ bool MassSpectrumBase::isError() const
     return m_isError;
 }
 
-LogSplines MassSpectrumBase::getSplineLine(double lambda) const
+const LogSplines& MassSpectrumBase::getSplineLine(double lambda)
 {
-    QVector<double> mz  = Intensities();
+    if(m_spline && m_lambda == lambda) return *m_spline;
+
+    m_lambda = lambda;
+    createSpline();
+
+    return *m_spline;
+}
+
+void MassSpectrumBase::deleteSpline()
+{
+    if(m_spline)
+    {
+        delete m_spline;
+        m_spline = nullptr;
+    }
+}
+
+void MassSpectrumBase::createSpline()
+{
+    deleteSpline();
+
+    QVector<double> I  = Intensities();
     QVector<double> time= TimeScale();
     FunVals xy(time.size());
     DataArray w(time.size(),1.0);
 
-    for(size_t i = 0; i < xy.size(); i++)
+    int i = 0;
+    std::for_each(xy.begin(),
+                  xy.end(),
+                  [time,I,&i](FunVal& txy)
     {
-        xy[i].first = time[i];
-        xy[i].second= mz[i];
-    }
+        txy.first = time[i];
+        txy.second= I[i++];
+    });
 
-    return LogSplines(xy,w,lambda);
+    m_spline = new LogSplines(xy,w,m_lambda);
 }

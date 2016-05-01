@@ -43,9 +43,12 @@ public:
     ///Returns smoothed spline standard deviation from the original raw data points
     /// \returns Standart deviation
     double std() const;
+
     inline double yMin() const { return m_yMin; }
     ///\returns Inner cubic spline pointer
     CubicSpline* cubicSpline() const { return m_cubicSpline; }
+
+
 private:
     double m_std; //standard spline deviation
     double m_yMin;

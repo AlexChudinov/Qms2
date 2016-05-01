@@ -10,6 +10,8 @@
 
 #include <vector>
 
+class PeacewisePolynomial;
+
 typedef std::vector<double> SplineCoefs;
 typedef std::pair<double,double> FunVal;
 typedef std::vector<FunVal> FunVals;
@@ -31,8 +33,8 @@ public:
     double operator()(double x) const;
 
 private:
-    int m_n;
-    SplineCoefs m_x,m_a,m_b,m_c,m_d;
+
+    PeacewisePolynomial* m_polynomial;
 };
 
 #endif // CUBICSPLINE_H

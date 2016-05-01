@@ -258,7 +258,7 @@ void MassSpecPlot::mouseReleaseEvent(QMouseEvent *)
 void MassSpecPlot::addSpline()
 {
     QVector<double> xvalues, yvalues;
-    LogSplines spline = m_msDataStruct->getSplineLine(m_lambda);
+    const LogSplines& spline = m_msDataStruct->getSplineLine(m_lambda);
     emit splineStd(spline.std());
     if(rescalable())
     {
