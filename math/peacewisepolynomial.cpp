@@ -1,4 +1,5 @@
 #include "peacewisepolynomial.h"
+#include <Solvers.h>
 
 #define RU_LOCALE //defines russian locale for error string
 
@@ -120,12 +121,14 @@ PeacewisePolynomial PeacewisePolynomial::diff() const
     }
 }
 
-double PeacewisePolynomial::fZero(double xstart) const
+double PeacewisePolynomial::fRightZero(double xstart) const
 {
-    int i = idxOfInterval(xstart), inc;
-    if(m_polyCoefs[m_polyOrder*i] < m_polyCoefs[m_polyOrder*(i+1)])
-        //move left
-    {
+    unsigned int i = idxOfInterval(xstart);
 
-    }
+    while(i != m_x.size()-1 && (*this)(i)*(*this)(++i) > 0);
+
+    return math::fZero(*this,
+                       static_cast<double>(i-1),
+                       static_cast<double>(i),
+                       1e-10);
 }

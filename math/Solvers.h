@@ -1,10 +1,6 @@
 #ifndef _SOLVERS_
 #define _SOLVERS_
 
-#include "exception.h"
-
-#include <sstream>
-
 namespace math
 {
     /*System of equations with symmetric diagonal matrix*/
@@ -91,6 +87,40 @@ namespace math
         return 0;
     }
 
+    ///Solves equation fun(x) = 0 (abs(fun(x))<eps) on interval [a,b]
+    /// \param fun Function
+    /// \param a Left interval boundary
+    /// \param b Right interval bounadry
+    /// \param eps Small value
+    template<class FunObject, class DataType>
+    DataType fZero(FunObject fun, DataType a, DataType b, DataType eps) throw()
+    {
+        class Abs
+        {
+        public:
+            DataType operator()(DataType x) const
+            {
+                return x >= static_cast<DataType>(0.0) ? x : -x;
+            }
+        } abs;
+
+        if(fun(a)*fun(b) > static_cast<DataType>(0.0))
+            return fun(a) <= fun(b) ? a : b;
+
+        if(abs(fun(a)) < eps && abs(fun(b)) < eps )
+            return a; //or b does not matter
+
+        if(fun(a) < fun(b)) std::swap(a,b);
+
+        while(true)
+        {
+            DataType c = .5*(a+b), fc = fun(c);
+            if (abs(fc)<eps) return c;
+            if (fc < 0) b = c;
+            if (fc > 0) a = c;
+        }
+
+    }
 }
 
 #endif // _SOLVERS_

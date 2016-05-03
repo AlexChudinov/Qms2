@@ -49,9 +49,9 @@ public:
     ///Calculates polynomial derivative
     PeacewisePolynomial diff() const;
 
-    ///\return x-value of closest polynomial zeros
+    ///\return x-value of closest polynomial zeros at the right side from xstart
     /// it is supposed that polynomial has continuous first derivative
-    double fZero(double xstart) const;
+    double fRightZero(double xstart) const;
 private:
     DArray m_x;
     DArray m_polyCoefs;

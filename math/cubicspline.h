@@ -32,6 +32,11 @@ public:
     /// \returns y-value
     double operator()(double x) const;
 
+    ///Estimates closest right maximum
+    /// \param [in] xstart Start x-value
+    /// \return Closest maximum from the right side of xstart or the last x value
+    double fRightMax(double xstart) const;
+
 private:
 
     PeacewisePolynomial* m_polynomial;

@@ -57,3 +57,9 @@ double CubicSpline::operator ()(double x) const
 {
     return (*m_polynomial)(x);
 }
+
+double CubicSpline::fRightMax(double xstart) const
+{
+    PeacewisePolynomial dp = m_polynomial->diff();
+    double xzero = dp.fRightZero(xstart);
+}
