@@ -62,7 +62,7 @@ void IMassSpectrum::loadMassSpec(QString fileName, QString fileFilter)
         removeData();
         m_msDataStruct = new TofMacSupport(this);
 
-        emit state("Загрузка файла...");
+        emit state("Загрузка файла " + fileName + " ...");
 
         QApplication::setOverrideCursor(Qt::WaitCursor);
 
@@ -81,7 +81,7 @@ void IMassSpectrum::loadMassSpec(QString fileName, QString fileFilter)
             return;
         }
         m_type = TOFFILE;
-        emit state(fileName);
+        emit state(QString());
 
         emit showMassSpec(qobject_cast<QObject*>(m_msDataStruct));
         return;

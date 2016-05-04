@@ -175,6 +175,8 @@ MassSpecPlot::~MassSpecPlot()
 void MassSpecPlot::setMassSpec(QObject *massSpec)
 {
     m_msDataStruct = qobject_cast<MassSpectrumBase*>(massSpec);
+    connect(m_msDataStruct,SIGNAL(massSpecViewChanged()),
+            m_msDataStruct,SLOT(createSpline()));
     connect(m_msDataStruct,SIGNAL(massSpecViewChanged()),this,SLOT(showMassSpec()));
     connect(this,SIGNAL(showTotal(bool)),m_msDataStruct,SLOT(setShowTotal(bool)));
 

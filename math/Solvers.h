@@ -104,11 +104,9 @@ namespace math
             }
         } abs;
 
-        if(fun(a)*fun(b) > static_cast<DataType>(0.0))
+        if(fun(a)*fun(b) > static_cast<DataType>(0.0)
+                || (abs(fun(a)) < eps && abs(fun(b)) < eps))
             return fun(a) <= fun(b) ? a : b;
-
-        if(abs(fun(a)) < eps && abs(fun(b)) < eps )
-            return a; //or b does not matter
 
         if(fun(a) < fun(b)) std::swap(a,b);
 

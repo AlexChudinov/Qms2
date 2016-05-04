@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <logsplines.h>
+#include <QVector>
 
 class MassSpectrumBase : public QObject
 {
@@ -11,11 +12,10 @@ public:
     MassSpectrumBase(QObject* parent = 0);
     virtual ~MassSpectrumBase();
 
-    //Virtual functions to access mass spectrum data
-    virtual QVector<double> MassScale()   const = 0; //returns mass scale
-    virtual QVector<double> TimeScale()   const = 0; //returns time scale data
-    virtual QVector<double> Intensities() const = 0; //returns intensiti vector
-    virtual QVector<double> Chromatogram()const = 0; //returns ion current intensity
+    inline QVector<double> MassScale()   const{ return m_mz; }
+    inline QVector<double> TimeScale()   const{ return m_t; }
+    inline QVector<double> Intensities() const{ return m_I; }
+    inline QVector<double> Chromatogram()const{ return m_tic;}
     virtual size_t getMassSpecNum() const = 0; //returns number of mass spectrums in the data struct
 
     ///Calculates spline line
@@ -60,7 +60,14 @@ protected:
 
     void deleteSpline();
 
-private slots:
+    ///Data bufferization
+    virtual void recalculateMassSpec() = 0;
+    QVector<double> m_mz;
+    QVector<double> m_I;
+    QVector<double> m_t;
+    QVector<double> m_tic;
+
+protected slots:
     void createSpline();
 };
 

@@ -6,6 +6,7 @@ MassSpectrumBase::MassSpectrumBase(QObject *parent)
     :
       QObject(parent),
       m_k(2.9),m_t0(-0.07), //default calibration parameters taken from the most of our data
+      m_idx(-1),
       m_showTotal(false),
       m_isNeedToSave(false),
       m_isError(false),
@@ -92,6 +93,7 @@ void MassSpectrumBase::setMassSpecIdx(int idx)
     if(idx == m_idx) return;
     m_idx = idx;
     if(m_spline) createSpline();
+    recalculateMassSpec();
     emit massSpecIdxChanged();
 }
 
@@ -106,6 +108,7 @@ void MassSpectrumBase::setShowTotal(bool showTotal)
     if(showTotal == m_showTotal) return;
     m_showTotal = showTotal;
     if(m_spline) createSpline();
+    recalculateMassSpec();
     emit showTotalChanged();
     //if(m_spline) createSpline();
 }
@@ -163,18 +166,16 @@ void MassSpectrumBase::createSpline()
 {
     deleteSpline();
 
-    QVector<double> I  = Intensities();
-    QVector<double> time= TimeScale();
-    FunVals xy(time.size());
-    DataArray w(time.size(),1.0);
+    FunVals xy(m_t.size());
+    DataArray w(m_t.size(),1.0);
 
     int i = 0;
     std::for_each(xy.begin(),
                   xy.end(),
-                  [time,I,&i](FunVal& txy)
+                  [this,&i](FunVal& txy)
     {
-        txy.first = time[i];
-        txy.second= I[i++];
+        txy.first = m_t[i];
+        txy.second= m_I[i++];
     });
 
     m_spline = new LogSplines(xy,w,m_lambda);

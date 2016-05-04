@@ -92,104 +92,6 @@ TdcEvents TdcDataStorage::getCurrentFrame() const
     return res;
 }
 
-QVector<double> TdcDataStorage::Intensities() const
-{
-    if (getMassSpecIdx() < 0) return QVector<double>(); //no data return empty vector
-
-    QVector<double> res;
-
-    if (isShowTotal())
-    {
-        res = QVector<double>
-                (
-                    std::max_element
-                    (
-                        m_pTdcEvents.begin(),
-                        m_pTdcEvents.end(),
-                        [](const TdcEvent& e1, const TdcEvent& e2)->bool{ return e1.second < e2.second; }
-                    )->second
-                );
-
-        std::for_each(m_pTdcEvents.begin(),m_pTdcEvents.end(),[&res](const TdcEvent& event)->void{ if (event.second != 0) res[event.second-1]++; }); //build histogramm
-    }
-    else
-    {
-        TdcEvents currentFrame = getCurrentFrame();
-        res = QVector<double>
-                (
-                    std::max_element
-                    (
-                        currentFrame.begin(),
-                        currentFrame.end(),
-                        [](const TdcEvent& e1, const TdcEvent& e2)->bool{ return e1.second < e2.second; }
-                    )->second
-                );
-
-        std::for_each(currentFrame.begin(),currentFrame.end(),[&res](const TdcEvent& event)->void{ if (event.second != 0) res[event.second-1]++; });
-    }
-    return res;
-}
-
-QVector<double> TdcDataStorage::TimeScale() const
-{
-    if (getMassSpecIdx() < 0) return QVector<double>(); //no data return empty vector
-
-    QVector<double> res;
-    double t0 = 0.5;
-
-    if (isShowTotal())
-    {
-        res = QVector<double>
-                (
-                    std::max_element
-                    (
-                        m_pTdcEvents.begin(),
-                        m_pTdcEvents.end(),
-                        [](const TdcEvent& e1, const TdcEvent& e2)->bool{ return e1.second < e2.second; }
-                    )->second
-                );
-    }
-    else
-    {
-        TdcEvents currentFrame = getCurrentFrame();
-        res = QVector<double>
-                (
-                    std::max_element
-                    (
-                        currentFrame.begin(),
-                        currentFrame.end(),
-                        [](const TdcEvent& e1, const TdcEvent& e2)->bool{ return e1.second < e2.second; }
-                    )->second
-                );
-    }
-
-    std::for_each(res.begin(),res.end(),[&t0](double& time)->void{ time = (t0++) * Tdc::m_tdcTimeStepUs; });
-
-    return res;
-}
-
-QVector<double> TdcDataStorage::MassScale() const
-{
-    QVector<double> res = TimeScale();
-    std::for_each(res.begin(),res.end(),[this](double& mass)->void{ mass = timeToMass(mass); });
-    return res;
-}
-
-QVector<double> TdcDataStorage::Chromatogram() const
-{
-    if (getMassSpecNum() <= 0) return QVector<double>();
-    QVector<double> res(getMassSpecNum());
-    TdcEvents::const_iterator pFrame = m_pTdcEvents.begin();
-    std::for_each(res.begin(),res.end(),
-                  [&pFrame,this](double& tic)->void
-                  {
-                        tic = static_cast<double>(std::distance(pFrame,jumpToNextFrame(pFrame)) - m_frameSize); //remove elements containing zeros
-                        pFrame = jumpToNextFrame(pFrame);
-                  }
-                 );
-    return res;
-}
-
 size_t TdcDataStorage::getMassSpecNum() const
 {
     int massSpecNum = 0;
@@ -214,4 +116,83 @@ int TdcDataStorage::saveFileAscii(QString fileName) const
                                               << "\n"; });
     file.close();
     return 0;
+}
+
+void TdcDataStorage::recalculateMassSpec()
+{
+    if (getMassSpecNum() <= 0) return;
+
+    double t0 = 0.5;
+    int maxT;
+
+    if (isShowTotal())
+    {
+        maxT = std::max_element
+                (
+                    m_pTdcEvents.begin(),
+                    m_pTdcEvents.end(),
+                    [](const TdcEvent& e1, const TdcEvent& e2)
+                    ->bool
+        {
+            return e1.second < e2.second;
+        })->second;
+        m_t.resize(maxT);
+        m_I.resize(maxT);
+        m_mz.resize(maxT);
+
+        std::for_each(m_pTdcEvents.begin(),
+                      m_pTdcEvents.end(),
+                      [this](const TdcEvent& event)->void
+        {
+            if (event.second != 0) m_I[event.second-1]++;
+        }); //build histogramm
+    }
+    else
+    {
+        TdcEvents currentFrame = getCurrentFrame();
+        maxT = std::max_element(
+                    currentFrame.begin(),
+                    currentFrame.end(),
+                    [](const TdcEvent& e1, const TdcEvent& e2)
+                ->bool
+        {
+            return e1.second < e2.second;
+        })->second;
+
+        m_t.resize(maxT);
+        m_I.resize(maxT);
+        m_mz.resize(maxT);
+
+        std::for_each(currentFrame.begin(),
+                      currentFrame.end(),
+                      [this](const TdcEvent& event)->void
+        {
+            if (event.second != 0) m_I[event.second-1]++;
+        });
+    }
+
+    int i = 0;
+    std::for_each(m_t.begin(),
+                  m_t.end(),
+                  [&i,&t0,this](double& time)
+                  ->void
+    {
+        time = (t0++) * Tdc::m_tdcTimeStepUs;
+        m_mz[i++] = timeToMass(time);
+    });
+
+    //Calculate chromatogramm
+    m_tic.resize(getMassSpecNum());
+    TdcEvents::const_iterator pFrame = m_pTdcEvents.begin();
+    for(double& tI:m_tic) {
+        int sum = 0;
+        std::for_each(pFrame,
+                      jumpToNextFrame(pFrame),
+                      [&sum](TdcEvent evt)
+                ->void
+        {
+            if(evt.second != 0) ++sum;
+        });
+        tI = sum;
+    }
 }

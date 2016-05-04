@@ -52,6 +52,15 @@ public:
     ///\return x-value of closest polynomial zeros at the right side from xstart
     /// it is supposed that polynomial has continuous first derivative
     double fRightZero(double xstart) const;
+
+    ///Returns left-most point of peacewisepolynomial
+    inline double lBound() const { return *std::begin(m_x); }
+    ///Returns right-most point of a peacewisepolynomial
+    inline double rBound() const { return *(std::end(m_x)-1);}
+
+    ///\return Interval index to witch x belongs to
+    std::size_t idxOfInterval(double x) const;
+
 private:
     DArray m_x;
     DArray m_polyCoefs;
@@ -65,9 +74,6 @@ private:
     const char* m_badOrder;
 
     const char* m_className;
-
-    ///\return Interval index to witch x belongs to
-    std::size_t idxOfInterval(double x) const;
 };
 
 #endif // PEACEWISEPOLYNOMIAL_H

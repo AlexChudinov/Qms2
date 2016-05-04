@@ -21,10 +21,6 @@ public:
     TdcDataStorage(QObject* parent = 0, int frameSize = 5000);
     ~TdcDataStorage();
 
-    QVector<double> MassScale() const;
-    QVector<double> TimeScale() const;
-    QVector<double> Intensities() const;
-    QVector<double> Chromatogram() const;
     size_t getMassSpecNum() const;
 
     int getFrameSize() const;
@@ -42,6 +38,9 @@ signals:
 public slots:
     void readFrame(int eventsNum);
     void setFrameSize(int frameSize);
+
+protected:
+    void recalculateMassSpec();
 
 private:
     TdcReadThread* m_pTdcReadThread;

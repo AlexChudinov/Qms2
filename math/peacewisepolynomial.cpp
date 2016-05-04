@@ -125,7 +125,7 @@ double PeacewisePolynomial::fRightZero(double xstart) const
 {
     unsigned int i = idxOfInterval(xstart);
 
-    while(i != m_x.size()-1 && (*this)(i)*(*this)(++i) > 0);
+    while(i != m_x.size()-1 && (*this)(i)*(*this)(i+1) > 0) ++i;
 
     return math::fZero(*this,
                        static_cast<double>(i-1),

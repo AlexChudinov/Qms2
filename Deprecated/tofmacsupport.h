@@ -2,6 +2,7 @@
 #define TOFMACSUPPORT_H
 
 #include <massspectrumbase.h>
+#include <QVector>
 
 class MSDataStructI;
 
@@ -12,16 +13,13 @@ public:
     TofMacSupport(QObject* parent = 0);
     ~TofMacSupport();
 
-    //Main function implementation
-    QVector<double> MassScale()    const;
-    QVector<double> TimeScale()    const;
-    QVector<double> Intensities()  const;
-    QVector<double> Chromatogram() const;
     size_t getMassSpecNum() const;
 
 public slots:
     void loadMassSpec(const QString& str);
-
+protected:
+    ///Recalculates buffered mass spectrum data
+    void recalculateMassSpec();
 private:
     MSDataStructI* m_msDataStruct;
 };

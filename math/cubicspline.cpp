@@ -60,6 +60,18 @@ double CubicSpline::operator ()(double x) const
 
 double CubicSpline::fRightMax(double xstart) const
 {
+    if(xstart >= m_polynomial->rBound()) //calculation goes out of array
+        return xstart;
+
+    //Look for zero of derivative
     PeacewisePolynomial dp = m_polynomial->diff();
     double xzero = dp.fRightZero(xstart);
+
+    int i = m_polynomial->idxOfInterval(xzero);
+    double fZ = (*this)(xzero);
+
+    if (fZ >= (*this)(i) && fZ >= (*this)(i+1)) //this is the max - return
+        return xzero;
+    else
+        return fRightMax(i+1); // this is not the max - go further
 }
