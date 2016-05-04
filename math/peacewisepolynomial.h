@@ -53,6 +53,9 @@ public:
     /// it is supposed that polynomial has continuous first derivative
     double fRightZero(double xstart) const;
 
+    ///\return x-value of closest polynomial zero at the left side
+    double fLeftZero(double xstart) const;
+
     ///Returns left-most point of peacewisepolynomial
     inline double lBound() const { return *std::begin(m_x); }
     ///Returns right-most point of a peacewisepolynomial

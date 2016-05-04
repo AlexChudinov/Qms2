@@ -75,3 +75,8 @@ double CubicSpline::fRightMax(double xstart) const
     else
         return fRightMax(i+1); // this is not the max - go further
 }
+
+const PeacewisePolynomial &CubicSpline::polynomial() const
+{
+    return *m_polynomial;
+}

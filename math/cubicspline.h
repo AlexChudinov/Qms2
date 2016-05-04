@@ -37,6 +37,8 @@ public:
     /// \return Closest maximum from the right side of xstart or the last x value
     double fRightMax(double xstart) const;
 
+    ///Returns peacewise polynomial pointer
+    const PeacewisePolynomial &polynomial() const;
 private:
 
     PeacewisePolynomial* m_polynomial;

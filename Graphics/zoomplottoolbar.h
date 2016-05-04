@@ -19,7 +19,7 @@ signals:
     void hZoom(bool);
     void zoomOut();
 
-private:
+protected:
     QAction* m_vZoomAction;
     QAction* m_hZoomAction;
     QAction* m_zoomOutAction;

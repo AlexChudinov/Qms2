@@ -95,7 +95,8 @@ MassSpecToolBar::MassSpecToolBar(QWidget *parent)
       ZoomPlotToolBar(parent),
       m_switchScales(new QAction(QIcon(":/balance.png"),"Переключение между шкалой масс и времени",this)),
       m_showTotal(new QAction(QIcon(":/sum.png"),"Показать суммарный спектр / Показать единичный спектр", this)),
-      m_showSpline(new QAction(QIcon(":/smooth.png"),"Показать линию сплайна", this))
+      m_showSpline(new QAction(QIcon(":/smooth.png"),"Показать линию сплайна", this)),
+      m_choosePeak(new QAction(QIcon(":/peak.png"),"Определить параметры пика", this))
 {
     addAction(m_switchScales);
     connect(m_switchScales,SIGNAL(triggered()),this,SIGNAL(switchScale()));
@@ -106,6 +107,15 @@ MassSpecToolBar::MassSpecToolBar(QWidget *parent)
 
     addAction(m_showSpline);
     connect(m_showSpline,SIGNAL(triggered()),this,SIGNAL(showSplineTriggered()));
+
+    m_choosePeak->setCheckable(true);
+    addAction(m_choosePeak);
+    connect(m_choosePeak,SIGNAL(toggled(bool)),
+            this,SLOT(togglePeak(bool)));
+    connect(this,SIGNAL(vZoom(bool)),
+            m_choosePeak,SLOT(setChecked(bool)));
+    connect(this,SIGNAL(hZoom(bool)),
+            m_choosePeak,SLOT(setChecked(bool)));
 }
 
 MassSpecToolBar::~MassSpecToolBar()
@@ -139,6 +149,15 @@ void MassSpecToolBar::setShowSplineIcon(MassSpecPlot::MassSpecSplineShow type)
     case MassSpecPlot::MassSpecAndSpline:
         m_showSpline->setIcon(QIcon(":/splineandms.png"));
         break;
+    }
+}
+
+void MassSpecToolBar::togglePeak(bool checked)
+{
+    if(checked)
+    {
+        if(m_hZoomAction->isChecked()) m_hZoomAction->setChecked(false);
+        if(m_vZoomAction->isChecked()) m_vZoomAction->setChecked(false);
     }
 }
 

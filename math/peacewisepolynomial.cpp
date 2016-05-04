@@ -132,3 +132,15 @@ double PeacewisePolynomial::fRightZero(double xstart) const
                        static_cast<double>(i),
                        1e-10);
 }
+
+double PeacewisePolynomial::fLeftZero(double xstart) const
+{
+    unsigned int i = idxOfInterval(xstart);
+
+    while(i != 0 && (*this)(i)*(*this)(i-1) > 0) --i;
+
+    return math::fZero(*this,
+                       static_cast<double>(i),
+                       static_cast<double>(i+1),
+                       1e-10);
+}

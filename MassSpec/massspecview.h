@@ -134,10 +134,15 @@ public slots:
     ///Changes the show spline button icon
     /// \param type What to show from the variants from the MassSpecPlot::MassSpecSplineShow enumeration
     void setShowSplineIcon(MassSpecPlot::MassSpecSplineShow type);
+
+    ///Toggle the peak button
+    /// \param checked Button state
+    void togglePeak(bool checked);
 private:
     QAction* m_switchScales;
     QAction* m_showTotal;
     QAction* m_showSpline;
+    QAction* m_choosePeak;
 };
 
 /*!

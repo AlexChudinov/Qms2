@@ -35,7 +35,7 @@ public slots:
     void setHZoom(bool hZoom);
     void setZoomOut(bool zoomOut = true);
 
-private:
+protected:
     QCursor* m_zoomOutCursor;
     QCursor* m_vZoomCursor;
     QCursor* m_hZoomCursor;

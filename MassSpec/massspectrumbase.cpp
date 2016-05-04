@@ -1,6 +1,7 @@
 #include "massspectrumbase.h"
 #include <calibration.hpp>
 #include <QMessageBox>
+#include <peacewisepolynomial.h>
 
 MassSpectrumBase::MassSpectrumBase(QObject *parent)
     :
@@ -179,4 +180,19 @@ void MassSpectrumBase::createSpline()
     });
 
     m_spline = new LogSplines(xy,w,m_lambda);
+}
+
+PeakParams MassSpectrumBase::getPeak(double xstart, double ymin)
+{
+    double x0,I0,xl,xr;
+    x0 = m_spline->cubicSpline()->fRightMax(xstart);
+    I0 = (*m_spline)(x0);
+    if(I0 < ymin)
+    {
+        int idx = m_spline->cubicSpline()->polynomial().idxOfInterval(x0);
+        return getPeak(idx+1,ymin);
+    }
+    xl = m_spline->cubicSpline()->polynomial().diff().fLeftZero(x0);
+    xr = m_spline->cubicSpline()->polynomial().diff().fRightZero(x0);
+    return PeakParams(x0,I0,xr-xl);
 }

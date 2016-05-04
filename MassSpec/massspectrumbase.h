@@ -5,6 +5,29 @@
 #include <logsplines.h>
 #include <QVector>
 
+///Peal parameters
+class PeakParams
+{
+public:
+    inline PeakParams(double x0_ = 0.0,
+                      double I0_ = 0.0,
+                      double w_ = 0.0)
+        :
+          m_x0(x0_),m_I0(I0_),m_w(w_){;}
+
+    inline double x0() const { return m_x0; }
+    inline double I0() const { return m_I0; }
+    inline double w()  const { return m_w; }
+
+    inline void x0(double x0_) { m_x0 = x0_; }
+    inline void I0(double I0_) { m_I0 = I0_; }
+    inline void w(double w_)   { m_w  = w_; }
+private:
+    double m_x0; //peak position
+    double m_I0; //peak intensity
+    double m_w;  //peak width (diffference between two first derivative extrema)
+};
+
 class MassSpectrumBase : public QObject
 {
     Q_OBJECT
@@ -30,6 +53,12 @@ public:
     bool isNeedToSave() const; //
     void needToSave(bool save = true);
     bool isError() const;
+
+    ///Returns parameters of a peak that is higher than ymin
+    /// to the right from the xstart
+    /// \param xstart Start point
+    /// \param ymin
+    PeakParams getPeak(double xstart, double ymin);
 signals:
     void calibrationChanged();
     void massSpecIdxChanged();

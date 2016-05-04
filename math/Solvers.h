@@ -88,6 +88,7 @@ namespace math
     }
 
     ///Solves equation fun(x) = 0 (abs(fun(x))<eps) on interval [a,b]
+    /// Note, that it is supposed that function has only one zero at the interval
     /// \param fun Function
     /// \param a Left interval boundary
     /// \param b Right interval bounadry

@@ -19,5 +19,6 @@
         <file alias="spline.png">Pictures/spline.png</file>
         <file alias="splineandms.png">Pictures/splineandms.png</file>
         <file alias="data_analysis.png">Pictures/Data_analysis.png</file>
+        <file alias="peak.png">Pictures/peak.png</file>
     </qresource>
 </RCC>
